@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}My projects{% endblock %}
+{% block main_class %}wide{% endblock %}
+{% block content %}
+<div class="header-row">
+    <h2>My projects</h2>
+    <a class="primary" href="{% url 'project_create' %}">+ New project</a>
+</div>
+{% for project in projects %}
+    <div class="card">
+        <a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a>
+        <p class="muted">{{ project.description|default:"No description" }}</p>
+        <span class="muted">Created {{ project.created_at|date:"d M Y" }}</span>
+    </div>
+{% empty %}
+    <p>No projects yet. Click <strong>+ New project</strong> to start.</p>
+{% endfor %}
+{% endblock %}

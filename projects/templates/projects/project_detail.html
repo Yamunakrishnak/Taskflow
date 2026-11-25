@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.name }}{% endblock %}
+{% block main_class %}wide{% endblock %}
+{% block content %}
+<div class="header-row">
+    <div>
+        <h2>{{ project.name }}</h2>
+        <span class="muted">{{ project.description }}</span>
+    </div>
+    <a href="{% url 'home' %}">&larr; All projects</a>
+</div>
+
+<div class="board">
+    {% for column in columns %}
+        <div class="column">
+            <h3>{{ column.name }} <span class="muted">({{ column.tasks.all|length }})</span></h3>
+            {% for task in column.tasks.all %}
+                <div class="task">
+                    <strong>{{ task.title }}</strong>
+                    <span class="badge {{ task.priority }}">{{ task.get_priority_display }}</span>
+                    <div class="muted">
+                        {% if task.assignee %}{{ task.assignee.email }}{% else %}Unassigned{% endif %}
+                        {% if task.due_date %} &middot; due {{ task.due_date|date:"d M" }}{% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="muted">No tasks</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<h3>Recent activity</h3>
+<ul class="activity">
+    {% for item in activity %}
+        <li>{{ item.action }} <span class="muted">by {{ item.actor.email|default:"unknown" }}, {{ item.created_at|date:"d M H:i" }}</span></li>
+    {% empty %}
+        <li class="muted">Nothing yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
